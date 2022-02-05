@@ -1,0 +1,310 @@
+{
+    "name": "project-dev",
+    "dockerComposeFile": ["docker-compose.yml"],
+    "service": "vscode",
+    "runServices": ["vscode"],
+    "shutdownAction": "stopCompose",
+    "workspaceFolder": "/workspace",
+    "postCreateCommand": "",
+    "extensions": [
+		"james-yu.latex-workshop",
+		"eamodio.gitlens",
+		"shardulm94.trailing-spaces",
+		"stkb.rewrap",
+		"vscode-icons-team.vscode-icons",
+		"bhughes339.replacerules",
+	],
+    "settings": {
+        // General settings
+        "files.eol": "\n",
+        "editor.wordWrap": "on",
+        // Latex settings
+        "latex-workshop.chktex.enabled": false,
+        "latex-workshop.latex.clean.subfolder.enabled": true,
+        "latex-workshop.latex.autoClean.run": "onBuilt",
+        "latex-workshop.latex.autoBuild.run": "never",
+        "editor.formatOnSave": false,
+        "files.associations": {
+            "*.tex": "latex"
+        },
+        "latex-workshop.latexindent.args": [
+            "-c",
+            "%DIR%/",
+            "%TMPFILE%",
+            "-y=\"defaultIndent: '%INDENT%',onlyOneBackUp: 1\"",
+        ],
+        "latex-workshop.latex.recipes": [
+            {
+                "name": "XeLaTex (2x)",
+                "tools": [
+                    "xelatex",
+                    "xelatex"
+                ]
+            },
+            {
+                "name": "XeLaTex -> makeIndex -> XeLaTex",
+                "tools": [
+                    "xelatex",
+                    "makeIndex",
+                    "xelatex"
+                ]
+            },
+            {
+                "name": "latexmk 🔃",
+                "tools": [
+                    "latexmk"
+                ]
+            },
+            {
+                "name": "latexmk (latexmkrc)",
+                "tools": [
+                    "latexmk_rconly"
+                ]
+            },
+            {
+                "name": "latexmk (lualatex)",
+                "tools": [
+                    "lualatexmk"
+                ]
+            },
+            {
+                "name": "pdflatex ➞ bibtex ➞ pdflatex × 2",
+                "tools": [
+                    "pdflatex",
+                    "bibtex",
+                    "pdflatex",
+                    "pdflatex"
+                ]
+            },
+            {
+                "name": "Compile Rnw files",
+                "tools": [
+                    "rnw2tex",
+                    "latexmk"
+                ]
+            },
+            {
+                "name": "Compile Jnw files",
+                "tools": [
+                    "jnw2tex",
+                    "latexmk"
+                ]
+            }
+        ],
+        "latex-workshop.latex.tools": [
+            { 
+                "name": "xelatex",
+                "command": "xelatex",
+                "args": [
+                    "-synctex=1",
+                    "-interaction=nonstopmode",
+                    "-file-line-error",
+                    "%DOCFILE%.tex"
+                ]
+            },
+            { 
+                "name": "bibTex",
+                "command": "bibtex",
+                "args": [
+                    "%DOCFILE%.aux"
+                ]
+            },
+            { 
+                "name": "makeIndex",
+                "command": "makeindex",
+                "args": [
+                    "%DOCFILE%.idx",
+                    //"-o %DOCFILE%.nls"
+                ]
+            },
+            {
+                "name": "latexmk",
+                "command": "latexmk",
+                "args": [
+                    "-synctex=1",
+                    "-interaction=nonstopmode",
+                    "-file-line-error",
+                    "-pdf",
+                    "-outdir=%OUTDIR%",
+                    "%DOC%"
+                ],
+                "env": {}
+            },
+            {
+                "name": "pdflatex",
+                "command": "pdflatex",
+                "args": [
+                    "-synctex=1",
+                    "-interaction=nonstopmode",
+                    "-file-line-error",
+                    "%DOC%"
+                ],
+                "env": {}
+            },
+            {
+                "name": "bibtex",
+                "command": "bibtex",
+                "args": [
+                    "%DOCFILE%"
+                ],
+                "env": {}
+            }
+        ],
+        "replacerules.rules": {
+
+            "Remove blank lines": {
+                "find": "^\\n",
+                "replace": ""
+            },
+            "Remove duplicate lines": {
+                "find": "^(.*)(\\r?\\n\\1)+$", // two consecutive identical lines
+                "replace": "$1"                // replace with one of the lines
+            },
+            "Remove leading https string": {
+                "find": ".*https?://(w+\\d?\\.)?",
+                "replace": ""
+            },
+            "Remove trailing slash and chars": {
+                "find": "/.*",
+                "replace": ""
+            },
+            "Remove quotation marks": {
+                "find": "(“|”)",
+                "replace": "\""
+            },
+            "Fix '--' -> '---'": {
+                "find": [" -- ", " --", "-- "],
+                "replace": ["---", "---", "---"]
+            },
+            "Set enquote environment": {
+                "find": [
+                    "\"(.*?) ?\"",
+                    "\" ?(.*?)\""
+                ],
+                "replace": [
+                    "\\enquote{$1}",
+                    "\\enquote{$1}"
+                ]
+            },
+            "Add verse line end": {
+                "find": "([^])$",
+                "replace": "$1\\\\"
+            },
+            "Replace ß ngerman": {
+                "find": ["(?<=(d|D|l|L|f|F|h|H|p|P|b|B|h|H)a)ß",
+                    "(?<=(w|W|m|M|r|R|g|G)i)ß",
+                    "(?<=(g|G|n|N)o)ß",
+                    "(?<=(m|M|n|N|g|G|w|W|k|K)u)ß",
+                    "(?<=(m|M|k|K)ü)ß",
+                    "(?<=(l|L)ä)ß",
+                    "(?<=(S|s)chl(o|u))ß",
+                    "(?<=(S|s)ch(o|u))ß",
+                    "(?<=(D|d)r(o|u))ß",
+                    "(?<=(F|f)l(o|u|ü))ß",
+                    "(?<=(F|f|P|p)re)ß",
+                    "(?<= (e|E|i|I))ß",
+                    "(?<=(H|h)ä)ß",
+                ],
+                "replace": [
+                    "ss", "ss", "ss", "ss", "ss", 
+                    "ss", "ss", "ss", "ss", "ss",
+                    "ss", "ss", "ss"
+                ]
+            },
+            "English Vers and Page References": {
+                "find": [
+                    "(Gen|Ex|Lev|Num|Dt|Deut|Josh|Jud|Ki|Sam|Chron|Esth|Neh)\\.",
+                    "(Ps|Prov|Cant|Lam|Is|Jer|Lam|Ezk|Dan|Hos|Mic|Hag|Zech|Mal)\\.",
+                    "(Mt|Matt|Mk|Lk|Rom|Cor|Gal|Eph|Phil|Col|Tim|Heb|Pet|Jam|Rev)\\.",
+                    "(vv|pp|cf|Cf)\\.",
+                    "([ ([])(v|p|lit|Lit)\\. ",
+                    "(Dr|Prof|trans|Trans)\\.",
+                ],
+                "replace": [
+                    "$1.\\",
+                    "$1.\\",
+                    "$1.\\",
+                    "$1.\\",
+                    "$1$2.\\ ",
+                    "$1.\\"
+                ]
+            },
+            "Replace Greuel": {
+                "find": "([gG])reuel",
+                "replace": "$1räuel"
+            },
+            "Replace HErr by JHWH":{
+                "find": [
+                    "[dD]es HErrn ", "[dD]es HErrn(.)",
+                    "[dD]e. HErr ", "[dD]e. HErr(.)",
+                    "[dD]e[nm] HErrn ", "[dD]e[nm] HErr(.)",
+                    "vom HErrn? ", "vom HErrn?(.)",
+                    "zum HErrn? ", "zum HErrn?(.)",
+                    "beim HErrn? ", "beim HErrn?(.)",
+                    "HErr ", "HErr(.)",
+                ],
+                "flags": "gm",
+                "replace": [
+                    "\\Yhwhs ", "\\Yhwhs[$1]",
+                    "\\Yhwh ", "\\Yhwh[$1]",
+                    "\\Yhwh ", "\\Yhwh[$1]",
+                    "von \\Yhwh ", "von \\Yhwh[$1]",
+                    "zu \\Yhwh ", "zu \\Yhwh[$1]",
+                    "bei \\Yhwh ", "bei \\Yhwh[$1]",
+                    "\\Yhwh ", "\\Yhwh[$1]",
+                ]
+            },
+            "adoc2tex: headings": {
+                "find": [
+                    "^== (.*)",
+                    "^=== (.*)",
+                    "^==== (.*)"
+                ],
+                "replace": [
+                    "\\chapter{$1}",
+                    "\\section{$1}",
+                    "\\subsection{$1}"
+                ]
+    
+            },
+            "adoc2tex: italics": {
+                "find": "_(.*?)_",
+                "replace": "\\textit{$1}"
+            },
+            "adoc2tex: footnotes": {
+                "find": "footnote:\\[(.*?)\\]",
+                "replace": "\\footnote{$1}"
+            },
+            "adoc2tex: blockquotes": {
+                "find": "____((.|\n)*?)____",
+                "replace": "\\blockquote{$1}"
+            },
+            "adoc2tex: verse env": {
+                "find": "----((.|\n)*?)----",
+                "replace": "\\begin{verse}$1\\end{verse}"
+            },
+            "adoc2tex: verse no.": {
+                "find": "\\^(.*?)\\^",
+                "replace": "$^{$1}$"
+            },
+            "LORD": {
+                "find": "LORD",
+                "replace": "\\textsc{Lord}"
+            }
+        },
+        "replacerules.rulesets": {
+            "Extract domain name": {
+                "rules": [
+                    "Remove leading https string",
+                    "Remove trailing slash and chars"
+                ]
+            },
+            "Set enquote environment": {
+                "rules": [
+                    "Remove quotation marks",
+                    "Set enquote environment"
+                ]
+            }
+        },
+    }
+}
