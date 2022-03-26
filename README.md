@@ -2,11 +2,9 @@
 
 This image runs LaTeX in a docker container.
 
-Clone this repository into your project if you want to use this devcontainer. Alternatively, download and copy the `.devcontainer` folder and all its files into your project folder.
+The devcontainer uses the Docker image [`tisasiju/latexdevcontainer:latest`](https://hub.docker.com/r/tisasiju/latexdevcontainer). I built the image based on this LaTeX Devcontainer Dockerfile: [`qdm12/latexdevcontainer`](https://github.com/qdm12/latexdevcontainer). Please refer to this GitHub repository for details on the devcontainer.
 
-The devcontainer uses the Docker image [`tisasiju/latexdevcontainer`](https://hub.docker.com/r/tisasiju/latexdevcontainer). I built the image based on this LaTeX Devcontainer Dockerfile: [`qdm12/latexdevcontainer`](https://github.com/qdm12/latexdevcontainer). Please refer to this GitHub repository for details on the devcontainer.
-
-I removed ChkTeX from the image because ChkTeX was slowing down my workflow quite a bit. Therefore, I also disabled it completely in my devcontainer: `"latex-workshop.chktex.enabled": false`.
+As CkTeX caused some performance issues on my machine I disabled it by default in my devcontainer config file: `"latex-workshop.chktex.enabled": false`. Furthermore I added several packages to the LaTeX installation.
 
 I added `oh-my-zsh` as the default shell in the devcontainer as well.
 
@@ -16,6 +14,7 @@ I've added several more LaTeX packages which I needed for my projects. These LaT
 
 - latexindent 
 - latexmk
+- koma-script
 - fontspec 
 - microtype 
 - polyglossia 
@@ -32,6 +31,7 @@ I've added several more LaTeX packages which I needed for my projects. These LaT
 - minifp
 - advdate
 - import
+- luatexbase
 
 ## VS Code Plugins
 
